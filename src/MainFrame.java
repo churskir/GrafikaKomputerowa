@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 public class MainFrame extends JFrame {
 
-    public MainFrame(ArrayList<Line2D> linesToView) {
+    public MainFrame() {
         super("Rysowanie");
-        JPanel panel = new MainPanel(linesToView);
+        JPanel panel = new MainPanel();
 
         add(panel);
 

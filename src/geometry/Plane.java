@@ -13,6 +13,14 @@ public class Plane {
         this.d = d;
     }
 
+    public void setD(int d) {
+        this.d = d;
+    }
+
+    public int getD() {
+        return d;
+    }
+
     public Point getPointWithLine(Line line) {
         double free = d;
         free += a * line.getxEquation().getFreeVariable();

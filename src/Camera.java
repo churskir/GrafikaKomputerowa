@@ -18,6 +18,16 @@ public class Camera {
         return result;
     }
 
+    public void zoomIn() {
+        this.viewport.setD(this.viewport.getD() + 1);
+    }
+
+    public void zoomOut() {
+        int d = viewport.getD();
+        if (d > 0)
+            this.viewport.setD(d - 1);
+    }
+
     private Line2D transform3Dto2D(Line line) {
         Point aProjection = viewport.getPointWithLine(new Line(line.getA(), location));
         Point bProjection = viewport.getPointWithLine(new Line(line.getB(), location));

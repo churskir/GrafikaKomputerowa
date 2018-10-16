@@ -49,6 +49,11 @@ public class Line {
         );
     }
 
+    public void move(int x, int y, int z) {
+        this.a.move(x, y, z);
+        this.b.move(x, y, z);
+    }
+
     @Override
     public String toString() {
         return "Line{" +

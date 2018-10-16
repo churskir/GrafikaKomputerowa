@@ -10,9 +10,8 @@ public class Cube {
         this.edges = edges;
     }
 
-    public Cube() {
-        double defaultStart = 20;
-        double defaultSize = 50 + defaultStart;
+    public Cube(double defaultStart, double defaultSize) {
+        defaultSize += defaultStart;
         this.edges = new ArrayList();
         edges.add(new Line(new Point(defaultStart, defaultStart, defaultStart), new Point(defaultSize , defaultStart, defaultStart)));
         edges.add(new Line(new Point(defaultStart, defaultStart, defaultStart), new Point(defaultStart, defaultSize , defaultStart)));

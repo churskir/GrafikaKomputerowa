@@ -1,5 +1,8 @@
+import geometry.Axis;
 import geometry.Cube;
 import geometry.Line;
+import geometry.Point;
+import geometry.Vector;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -8,17 +11,27 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
+import static geometry.Axis.X;
+import static geometry.Axis.Y;
+import static geometry.Axis.Z;
+
 public class MainPanel extends JPanel implements KeyListener {
 
     private ArrayList<geometry.Line2D> linesToView;
     private ArrayList<Line> edges;
-    private Camera camera = new Camera();
+    private Camera camera;
+
+    private final int moveStep = 1;
+    private final double rotationStep = Math.PI / 180;
+    private final int width = 1000;
+    private final int height = 600;
 
     public MainPanel() {
-        setPreferredSize(new Dimension(400, 400));
+        setPreferredSize(new Dimension(width, height));
         setFocusable(true);
         addKeyListener(this);
 
+        this.camera = new Camera(new Point(0, 0, 0));
         this.edges = new Cube(20, 50).getEdges();
         this.edges.addAll(new Cube(30, 20).getEdges());
         this.linesToView = camera.getView(edges);
@@ -28,12 +41,6 @@ public class MainPanel extends JPanel implements KeyListener {
     }
 
     public void keyTyped(KeyEvent event) {
-//        char keyTyped = event.getKeyChar();
-//        int keyCode = event.getKeyCode();
-//        boolean shiftDown = event.isShiftDown();
-//        System.out.println(keyTyped);
-//        System.out.println(keyCode);
-//        System.out.println(shiftDown);
         this.interpreteKey(event.getKeyChar());
         this.linesToView = this.camera.getView(this.edges);
         this.repaint();
@@ -52,7 +59,6 @@ public class MainPanel extends JPanel implements KeyListener {
     }
 
     private void interpreteKey(char key) {
-        System.out.println(key);
         switch (key) {
             case 'w':
                 moveLines(0, 1, 0);
@@ -78,6 +84,24 @@ public class MainPanel extends JPanel implements KeyListener {
             case '-':
                 this.camera.zoomOut();
                 break;
+            case 'i':
+                this.rotate(rotationStep, X);
+                break;
+            case 'k':
+                this.rotate(-1 * rotationStep, X);
+                break;
+            case 'j':
+                this.rotate(rotationStep, Y);
+                break;
+            case 'l':
+                this.rotate(-1 * rotationStep, Y);
+                break;
+            case 'u':
+                this.rotate(-1 * rotationStep, Z);
+                break;
+            case 'o':
+                this.rotate(rotationStep, Z);
+                break;
             default:
                 break;
         }
@@ -86,6 +110,24 @@ public class MainPanel extends JPanel implements KeyListener {
     private void moveLines(int x, int y, int z) {
         for (Line line: this.edges) {
             line.move(x, y, z);
+        }
+    }
+
+    private void rotate(double angle, Axis axis) {
+        Point cameraLocation;
+        for (Line edge: this.edges) {
+            cameraLocation = camera.getLocation().getCopy();
+            edge.move(
+                    -1 * cameraLocation.getY(),
+                    -1 * cameraLocation.getY(),
+                    -1 * cameraLocation.getZ()
+            );
+            edge.rotate(angle, axis);
+            edge.move(
+                    cameraLocation.getX(),
+                    cameraLocation.getY(),
+                    cameraLocation.getZ()
+            );
         }
     }
 }

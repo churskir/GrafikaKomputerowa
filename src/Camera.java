@@ -1,14 +1,15 @@
-import geometry.Line;
-import geometry.Line2D;
-import geometry.Point;
-import geometry.Point2D;
+import geometry.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Camera {
-    private Point location = new Point(0, 5, 0);
-    private Viewport viewport = new Viewport(10);
+    private Point location;
+    private Viewport viewport = new Viewport(5);
+
+    public Camera(Point location) {
+        this.location = location;
+    }
 
     public ArrayList<Line2D> getView(ArrayList<Line> objects) {
         ArrayList result = new ArrayList<Line2D>();
@@ -26,6 +27,10 @@ public class Camera {
         int d = viewport.getD();
         if (d > 0)
             this.viewport.setD(d - 1);
+    }
+
+    public Point getLocation() {
+        return location;
     }
 
     private Line2D transform3Dto2D(Line line) {

@@ -23,10 +23,29 @@ public class Point {
         return z;
     }
 
-    public void move(int x, int y, int z) {
+    public void move(double x, double y, double z) {
         this.x += x;
         this.y += y;
         this.z += z;
+    }
+
+    public void rotateX(double angle) {
+        y = Math.cos(angle) * y - Math.sin(angle) * z;
+        z = Math.sin(angle) * y + Math.cos(angle) * z;
+    }
+
+    public void rotateY(double angle) {
+        x = Math.cos(angle) * x + Math.sin(angle) * z;
+        z = -1 * Math.sin(angle) * x + Math.cos(angle) * z;
+    }
+
+    public void rotateZ(double angle) {
+        x = Math.cos(angle) * x - Math.sin(angle) * y;
+        y = Math.sin(angle) * x - Math.cos(angle) * y;
+    }
+
+    public Point getCopy() {
+        return new Point(x, y, z);
     }
 
     @Override

@@ -49,9 +49,34 @@ public class Line {
         );
     }
 
-    public void move(int x, int y, int z) {
+    /*
+    * Moves
+    *   x points in X axis
+    *   y points in Y axis
+    *   z points in Z axis
+    * */
+    public void move(double x, double y, double z) {
         this.a.move(x, y, z);
         this.b.move(x, y, z);
+    }
+
+    public void rotate(double angle, Axis axis) {
+        switch (axis) {
+            case X:
+                a.rotateX(angle);
+                b.rotateX(angle);
+                break;
+            case Y:
+                a.rotateY(angle);
+                b.rotateY(angle);
+                break;
+            case Z:
+                a.rotateZ(angle);
+                b.rotateZ(angle);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

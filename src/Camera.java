@@ -14,7 +14,8 @@ public class Camera {
     public ArrayList<Line2D> getView(ArrayList<Line> objects) {
         ArrayList result = new ArrayList<Line2D>();
         for (Line line: objects) {
-            result.add(this.transform3Dto2D(line));
+            if (pointIsNotBehindCamera(line.getA()) && pointIsNotBehindCamera(line.getB()))
+                result.add(this.transform3Dto2D(line));
         }
         return result;
     }
@@ -43,6 +44,6 @@ public class Camera {
     }
 
     private boolean pointIsNotBehindCamera(Point point) {
-        return true;
+        return point.getZ() > this.location.getZ();
     }
 }

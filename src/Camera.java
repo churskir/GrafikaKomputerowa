@@ -41,4 +41,8 @@ public class Camera {
                 new Point2D(bProjection)
         );
     }
+
+    private boolean pointIsNotBehindCamera(Point point) {
+        return true;
+    }
 }

@@ -18,7 +18,7 @@ import static geometry.Axis.Z;
 public class MainPanel extends JPanel implements KeyListener {
 
     private ArrayList<geometry.Line2D> linesToView;
-    private ArrayList<Line> edges;
+    private ArrayList<Line> edges = new ArrayList<>();
     private Camera camera;
 
     private final int moveStep = 1;
@@ -31,9 +31,9 @@ public class MainPanel extends JPanel implements KeyListener {
         setFocusable(true);
         addKeyListener(this);
 
-        this.camera = new Camera(new Point(0, 0, 0));
-        this.edges = new Cube(20, 50).getEdges();
-        this.edges.addAll(new Cube(30, 20).getEdges());
+        this.camera = new Camera(new Point(width / 2, height / 2, 0));
+        this.edges.addAll(new Cube(new Point(width / 2, height / 2, 100), new Vector(50, 50, 50)).getEdges());
+        this.edges.addAll(new Cube(new Point(width / 2, height / 2, 150), new Vector(10, 10, 10)).getEdges());
         this.linesToView = camera.getView(edges);
     }
 
@@ -85,10 +85,10 @@ public class MainPanel extends JPanel implements KeyListener {
                 this.camera.zoomOut();
                 break;
             case 'i':
-                this.rotate(rotationStep, X);
+                this.rotate(-1 * rotationStep, X);
                 break;
             case 'k':
-                this.rotate(-1 * rotationStep, X);
+                this.rotate(rotationStep, X);
                 break;
             case 'j':
                 this.rotate(rotationStep, Y);
@@ -118,7 +118,7 @@ public class MainPanel extends JPanel implements KeyListener {
         for (Line edge: this.edges) {
             cameraLocation = camera.getLocation().getCopy();
             edge.move(
-                    -1 * cameraLocation.getY(),
+                    -1 * cameraLocation.getX(),
                     -1 * cameraLocation.getY(),
                     -1 * cameraLocation.getZ()
             );

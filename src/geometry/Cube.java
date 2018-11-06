@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 public class Cube {
     private ArrayList edges = new ArrayList();
+    private ArrayList faces = new ArrayList<Face>();
     private HashMap<String, Point> apexes = new HashMap();
 
     public Cube(ArrayList edges) {
@@ -12,30 +13,19 @@ public class Cube {
         this.edges = edges;
     }
 
-    public Cube(double defaultStart, double defaultSize) {
-        defaultSize += defaultStart;
-        this.edges = new ArrayList();
-        edges.add(new Line(new Point(defaultStart, defaultStart, defaultStart), new Point(defaultSize , defaultStart, defaultStart)));
-        edges.add(new Line(new Point(defaultStart, defaultStart, defaultStart), new Point(defaultStart, defaultSize , defaultStart)));
-        edges.add(new Line(new Point(defaultSize , defaultStart, defaultStart), new Point(defaultSize, defaultSize ,defaultStart)));
-        edges.add(new Line(new Point(defaultStart, defaultSize, defaultStart), new Point(defaultSize ,defaultSize, defaultStart)));
-
-        edges.add(new Line(new Point(defaultStart, defaultStart, defaultSize), new Point(defaultSize, defaultStart, defaultSize)));
-        edges.add(new Line(new Point(defaultStart, defaultStart, defaultSize), new Point(defaultStart ,defaultSize, defaultSize)));
-        edges.add(new Line(new Point(defaultSize, defaultStart, defaultSize), new Point(defaultSize, defaultSize, defaultSize)));
-        edges.add(new Line(new Point(defaultStart, defaultSize, defaultSize), new Point(defaultSize, defaultSize, defaultSize)));
-
-        edges.add(new Line(new Point(defaultStart, defaultStart, defaultStart), new Point(defaultStart, defaultStart, defaultSize)));
-        edges.add(new Line(new Point(defaultSize, defaultStart, defaultStart), new Point(defaultSize, defaultStart, defaultSize)));
-        edges.add(new Line(new Point(defaultStart, defaultSize, defaultStart), new Point(defaultStart, defaultSize, defaultSize)));
-        edges.add(new Line(new Point(defaultSize, defaultSize, defaultStart), new Point(defaultSize, defaultSize, defaultSize)));
-    }
-
     public Cube(Point start, Vector dimensions) {
         prepareApexes(start, dimensions);
+
         prepareFrontEdges();
         prepareBackEdges();
         prepareSideEdges();
+
+        prepareFrontFace();
+        prepareBackFace();
+        prepareBottomFace();
+        prepareTopFace();
+        prepareLeftFace();
+        prepareRightFace();
     }
 
     public ArrayList getEdges() {
@@ -73,5 +63,71 @@ public class Cube {
         this.edges.add(new Line(this.apexes.get("frontRightBottom"), this.apexes.get("backRightBottom")));
         this.edges.add(new Line(this.apexes.get("frontRightTop"), this.apexes.get("backRightTop")));
         this.edges.add(new Line(this.apexes.get("frontLeftTop"), this.apexes.get("backLeftTop")));
+    }
+
+    private void prepareFrontFace() {
+        this.faces.add(
+                new Face(
+                    new Line(this.apexes.get("frontLeftBottom"), this.apexes.get("frontRightBottom")),
+                    new Line(this.apexes.get("frontRightBottom"), this.apexes.get("frontRightTop")),
+                    new Line(this.apexes.get("frontRightTop"), this.apexes.get("frontLeftTop")),
+                    new Line(this.apexes.get("frontLeftTop"), this.apexes.get("frontLeftBottom"))
+                )
+        );
+    }
+
+    private void prepareBackFace() {
+        this.faces.add(
+                new Face(
+                        new Line(this.apexes.get("backLeftBottom"), this.apexes.get("backRightBottom")),
+                        new Line(this.apexes.get("backRightBottom"), this.apexes.get("backRightTop")),
+                        new Line(this.apexes.get("backRightTop"), this.apexes.get("backLeftTop")),
+                        new Line(this.apexes.get("backLeftTop"), this.apexes.get("backLeftBottom"))
+                )
+        );
+    }
+
+    private void prepareBottomFace() {
+        this.faces.add(
+                new Face(
+                        new Line(this.apexes.get("frontLeftBottom"), this.apexes.get("frontRightBottom")),
+                        new Line(this.apexes.get("frontRightBottom"), this.apexes.get("backRightBottom")),
+                        new Line(this.apexes.get("backRightBottom"), this.apexes.get("backLeftBottom")),
+                        new Line(this.apexes.get("backLeftBottom"), this.apexes.get("frontLeftBottom"))
+                )
+        );
+    }
+
+    private void prepareTopFace() {
+        this.faces.add(
+                new Face(
+                        new Line(this.apexes.get("frontLeftTop"), this.apexes.get("frontRightTop")),
+                        new Line(this.apexes.get("frontRightTop"), this.apexes.get("backRightTop")),
+                        new Line(this.apexes.get("backRightTop"), this.apexes.get("backLeftTop")),
+                        new Line(this.apexes.get("backLeftTop"), this.apexes.get("frontLeftTop"))
+                )
+        );
+    }
+
+    private void prepareLeftFace() {
+        this.faces.add(
+                new Face(
+                        new Line(this.apexes.get("backLeftBottom"), this.apexes.get("frontLeftBottom")),
+                        new Line(this.apexes.get("frontLeftBottom"), this.apexes.get("frontLeftTop")),
+                        new Line(this.apexes.get("frontLeftTop"), this.apexes.get("backLeftTop")),
+                        new Line(this.apexes.get("backLeftTop"), this.apexes.get("backLeftBottom"))
+                )
+        );
+    }
+
+    private void prepareRightFace() {
+        this.faces.add(
+                new Face(
+                        new Line(this.apexes.get("backRightBottom"), this.apexes.get("frontRightBottom")),
+                        new Line(this.apexes.get("frontRightBottom"), this.apexes.get("frontRightTop")),
+                        new Line(this.apexes.get("frontRightTop"), this.apexes.get("backRightTop")),
+                        new Line(this.apexes.get("backRightTop"), this.apexes.get("backRightBottom"))
+                )
+        );
     }
 }

@@ -1,8 +1,8 @@
-import geometry.Axis;
-import geometry.Cube;
-import geometry.Line;
+import geometry.*;
 import geometry.Point;
-import geometry.Vector;
+import light.PointWithBrightness;
+import light.Source;
+import light.Sphere;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -17,24 +17,39 @@ import static geometry.Axis.Z;
 
 public class MainPanel extends JPanel implements KeyListener {
 
-    private ArrayList<geometry.Line2D> linesToView;
-    private ArrayList<Line> edges = new ArrayList<>();
-    private Camera camera;
+    private ArrayList<Polygon> polygonsToView;
+    private ArrayList<Point2D> pointsToView;
 
-    private final int moveStep = 1;
+    private ArrayList<Face> faces = new ArrayList<>();
+    private ArrayList<Point> points = new ArrayList<>();
+    private Sphere sphere;
+
+
+    private Camera camera;
+    private Source light = new Source(new Point(1000,600,0));
+
     private final double rotationStep = Math.PI / 180;
     private final int width = 1000;
     private final int height = 600;
 
     public MainPanel() {
+        System.out.println(Color.BLUE.getRed());
+        System.out.println(Color.BLUE.getGreen());
+        System.out.println(Color.BLUE.getBlue());
+
         setPreferredSize(new Dimension(width, height));
         setFocusable(true);
         addKeyListener(this);
 
         this.camera = new Camera(new Point(width / 2, height / 2, 0));
-        this.edges.addAll(new Cube(new Point(width / 2, height / 2, 100), new Vector(50, 50, 50)).getEdges());
-        this.edges.addAll(new Cube(new Point(width / 2, height / 2, 150), new Vector(10, 10, 10)).getEdges());
-        this.linesToView = camera.getView(edges);
+
+        // this.faces.addAll(Town.getFaces(new Point(width / 2, height / 1.5, 150)));
+        this.sphere = new Sphere(new Point(width / 2, height / 2, 150), 60);
+        this.points.addAll(this.sphere.getPoints());
+        this.camera.countLight(sphere, light);
+
+        this.polygonsToView = camera.getViewFaces(faces);
+        this.pointsToView = camera.getViewPoint(points);
     }
 
     public void keyPressed(KeyEvent event) {
@@ -42,7 +57,7 @@ public class MainPanel extends JPanel implements KeyListener {
 
     public void keyTyped(KeyEvent event) {
         this.interpreteKey(event.getKeyChar());
-        this.linesToView = this.camera.getView(this.edges);
+        this.polygonsToView = camera.getViewFaces(faces);
         this.repaint();
     }
 
@@ -53,30 +68,46 @@ public class MainPanel extends JPanel implements KeyListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        for (geometry.Line2D line: this.linesToView) {
-            g2d.draw(line.toAwtLine2D());
-        }
+        g2d.setStroke(new BasicStroke(2));
+        if (!this.polygonsToView.isEmpty())
+            for (Polygon polygon: this.polygonsToView)
+                this.paintPolygon(g2d, polygon);
+        if (!this.pointsToView.isEmpty())
+            for (PointWithBrightness point: this.camera.getPointsWithBrightness())
+                this.paintPoint(g2d, point);
+    }
+
+    private void paintPolygon(Graphics2D g2d, Polygon polygon) {
+        g2d.setColor(Color.BLACK);
+        g2d.draw(polygon);
+        g2d.setColor(Color.GREEN);
+        g2d.fillPolygon(polygon);
+    }
+
+    private void paintPoint(Graphics2D g2d, PointWithBrightness point) {
+        g2d.setColor(new Color(point.getRelativeBrightness(), point.getRelativeBrightness(), 255));
+        g2d.drawOval((int) point.getPoint().getX(), (int) point.getPoint().getY(), 10, 10);
     }
 
     private void interpreteKey(char key) {
         switch (key) {
             case 'w':
-                moveLines(0, 1, 0);
+                move(0, 1, 0);
                 break;
             case 's':
-                moveLines(0, -1, 0);
+                move(0, -1, 0);
                 break;
             case 'a':
-                moveLines(1, 0, 0);
+                move(1, 0, 0);
                 break;
             case 'd':
-                moveLines(-1, 0, 0);
+                move(-1, 0, 0);
                 break;
             case 'q':
-                moveLines(0, 0, 1);
+                move(0, 0, 0.5);
                 break;
             case 'e':
-                moveLines(0, 0, -1);
+                move(0, 0, -0.5);
                 break;
             case '+':
                 this.camera.zoomIn();
@@ -107,27 +138,27 @@ public class MainPanel extends JPanel implements KeyListener {
         }
     }
 
-    private void moveLines(int x, int y, int z) {
-        for (Line line: this.edges) {
-            line.move(x, y, z);
+    private void move(double x, double y, double z) {
+        for (Face face: this.faces) {
+            face.move(new Vector(x, y, z));
         }
     }
 
     private void rotate(double angle, Axis axis) {
         Point cameraLocation;
-        for (Line edge: this.edges) {
+        for (Face face: this.faces) {
             cameraLocation = camera.getLocation().getCopy();
-            edge.move(
+            face.move(new Vector(
                     -1 * cameraLocation.getX(),
                     -1 * cameraLocation.getY(),
                     -1 * cameraLocation.getZ()
-            );
-            edge.rotate(angle, axis);
-            edge.move(
+            ));
+            face.rotate(angle, axis);
+            face.move(new Vector(
                     cameraLocation.getX(),
                     cameraLocation.getY(),
                     cameraLocation.getZ()
-            );
+            ));
         }
     }
 }

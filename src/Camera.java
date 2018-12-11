@@ -66,21 +66,32 @@ public class Camera {
         return pointsWithBrightness;
     }
 
-    public int getLight(Point point, Point sphereCenter, Source source) {
+    public int getLight(Point point, Point sphereCenter, Source source, boolean x) {
         Vector N = new Vector(point, sphereCenter).normalize();
-        Vector L = new Vector(point, source.getLocation());
+        Vector L = new Vector(point, source.getLocation()).normalize();
         double b = Vector.getAngle(N, L);
         double bAndA = Vector.getAngle(N, new Vector(this.location, new Point(0,0,0)));
         double a = bAndA - b;
-        return this.phongsModel.getValue(L, N, a);
+
+        Vector V = new Vector(point, this.location);
+        Vector R = Vector.sum(
+                    Vector.multiply(
+                            N,
+                            -2 * Vector.multiply(V, N)
+                    ),
+                    V);
+        if (x) System.out.println(a * 180);
+//        return this.phongsModel.getValue(L, N, V, R, a, x);
+        return this.phongsModel.getValue(L, N, a, x);
     }
 
     public void countLight(Sphere sphere, Source source) {
         int maxLight = 1;
         int minLight = 1;
         int light;
+        int i = 0;
         for (Point point: sphere.getPoints()) {
-            light = getLight(point, sphere.getCenter(), source);
+            light = getLight(point, sphere.getCenter(), source, i % 1000 == 0);
             this.pointsWithBrightness.add(
                     new PointWithBrightness(
                             this.getPointProjection(point),
@@ -91,7 +102,9 @@ public class Camera {
                 maxLight = light;
             if (light < minLight)
                 minLight = light;
+
         }
+        System.out.println(maxLight - minLight);
         for (PointWithBrightness point: this.pointsWithBrightness)
             point.setRelativeBrightness(minLight, maxLight);
     }

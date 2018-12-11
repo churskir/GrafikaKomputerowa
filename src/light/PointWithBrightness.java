@@ -23,5 +23,7 @@ public class PointWithBrightness {
 
     public void setRelativeBrightness(int minLight, int maxBrightness) {
         relativeBrightness = (int) ((light - minLight) / (double) (maxBrightness - minLight) * 255);
+//        relativeBrightness = (int) ((light - minLight) / (double) 200 * 255);
+//        if (relativeBrightness > 255) relativeBrightness = 255;
     }
 }

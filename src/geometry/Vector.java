@@ -34,13 +34,24 @@ public class Vector {
         return a.x * b.x + a.y * b.y + a.z * b.z;
     }
 
+    public static Vector multiply(Vector a, double n) {
+        return new Vector(
+                a.x * n,
+                a.y * n,
+                a.z * n
+        );
+    }
+
+    public static Vector sum(Vector a, Vector b) {
+        return new Vector(
+          a.x + b.x, a.y + b.y, a.z + b.z
+        );
+    }
+
     public static double getAngle(Vector a, Vector b) {
         Vector aN = a.normalize();
         Vector bN = b.normalize();
-//        System.out.println(aN.toString());
-//        System.out.println(bN.toString());
         double dist = Vector.getDistance(aN, bN);
-//        System.out.println(dist);
         return 2 * Math.asin(dist / 2);
     }
 

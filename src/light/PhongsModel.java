@@ -15,11 +15,10 @@ public class PhongsModel {
     // L - wektor pomiędzy punktem na powierzchni a źródłem światła
     // N - wektor normalny prostopadły do powierzchni
     // a - kąt pomiędzy promieniem odbitym a kierunkiem do obserwatora
-    public int getValue(Vector L, Vector N, double a) {
-        int light = (int) (Ia * Ka +
+    public double getValue(Vector L, Vector N, double a) {
+        return (Ia * Ka +
                 Fatt * Ip * Kd * Vector.multiply(N, L) +
                 Fatt * Ip * Ks * Math.pow(Math.cos(a), n));
-        return  light;
     }
 
 }

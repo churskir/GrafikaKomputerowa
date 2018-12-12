@@ -66,7 +66,7 @@ public class Camera {
         return pointsWithBrightness;
     }
 
-    public int getLight(Point point, Point sphereCenter, Source source) {
+    public double getLight(Point point, Point sphereCenter, Source source) {
         Vector N = new Vector(point, sphereCenter).normalize();
         Vector L = new Vector(point, source.getLocation());
         double b = Vector.getAngle(N, L);
@@ -76,9 +76,9 @@ public class Camera {
     }
 
     public void countLight(Sphere sphere, Source source) {
-        int maxLight = 1;
-        int minLight = 1;
-        int light;
+        double maxLight = Double.MIN_VALUE;
+        double minLight = 1;
+        double light;
         for (Point point: sphere.getPoints()) {
             light = getLight(point, sphere.getCenter(), source);
             this.pointsWithBrightness.add(
@@ -92,6 +92,8 @@ public class Camera {
             if (light < minLight)
                 minLight = light;
         }
+        System.out.println("max " + maxLight);      
+        System.out.println("min " + minLight);
         for (PointWithBrightness point: this.pointsWithBrightness)
             point.setRelativeBrightness(minLight, maxLight);
     }

@@ -5,10 +5,10 @@ import geometry.Point2D;
 public class PointWithBrightness {
 
     private Point2D point;
-    private int light;
+    private double light;
     private int relativeBrightness; // Max == 255
 
-    public PointWithBrightness(Point2D point, int light) {
+    public PointWithBrightness(Point2D point, double light) {
         this.point = point;
         this.light = light;
     }
@@ -21,7 +21,7 @@ public class PointWithBrightness {
         return relativeBrightness;
     }
 
-    public void setRelativeBrightness(int minLight, int maxBrightness) {
-        relativeBrightness = (int) ((light - minLight) / (double) (maxBrightness - minLight) * 255);
+    public void setRelativeBrightness(double minLight, double maxBrightness) {
+        relativeBrightness = (int) ((light - minLight) / (maxBrightness - minLight) * 255);
     }
 }

@@ -1,7 +1,6 @@
 package light;
 
 import geometry.Point;
-import geometry.Vector;
 
 import java.util.ArrayList;
 

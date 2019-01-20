@@ -67,8 +67,8 @@ public class Camera {
     }
 
     public double getLight(Point point, Point sphereCenter, Source source) {
-        Vector N = new Vector(point, sphereCenter).normalize();
-        Vector L = new Vector(point, source.getLocation());
+        Vector N = new Vector(sphereCenter, point).normalize();
+        Vector L = new Vector(source.getLocation(), point).normalize();
         double b = Vector.getAngle(N, L);
         double bAndA = Vector.getAngle(N, new Vector(this.location, new Point(0,0,0)));
         double a = bAndA - b;
@@ -92,7 +92,7 @@ public class Camera {
             if (light < minLight)
                 minLight = light;
         }
-        System.out.println("max " + maxLight);      
+        System.out.println("max " + maxLight);
         System.out.println("min " + minLight);
         for (PointWithBrightness point: this.pointsWithBrightness)
             point.setRelativeBrightness(minLight, maxLight);

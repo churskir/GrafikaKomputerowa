@@ -26,7 +26,7 @@ public class MainPanel extends JPanel implements KeyListener {
 
 
     private Camera camera;
-    private Source light = new Source(new Point(1000,600,0));
+    private Source light;
 
     private final double rotationStep = Math.PI / 180;
     private final int width = 1000;
@@ -42,6 +42,7 @@ public class MainPanel extends JPanel implements KeyListener {
         addKeyListener(this);
 
         this.camera = new Camera(new Point(width / 2, height / 2, 0));
+        this.light = new Source(new Point(10000,-1000,1000));
 
         // this.faces.addAll(Town.getFaces(new Point(width / 2, height / 1.5, 150)));
         this.sphere = new Sphere(new Point(width / 2, height / 2, 150), 60);
